@@ -1,21 +1,19 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbDoctor;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName LbDoctorService.java
- * @Description TODO
- * @createTime 2020年03月26日 13:59:00
- */
-public interface LbDoctorService {
+@Repository
+@Mapper
+public interface LbDoctorMapper {
     //查医生集合
-    PageQuery<LbDoctor> findList(Integer pageNo, Integer pageSize,String name,String certId);
+    PageQuery<LbDoctor> findList(Integer pageNo, Integer pageSize, String name, String certId);
 
     //查询所有
     List<LbDoctor> findAll();

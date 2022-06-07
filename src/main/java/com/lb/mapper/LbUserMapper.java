@@ -1,20 +1,18 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbUser;
 import com.lb.vo.ActiveUser;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.HttpSession;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName LbUserService.java
- * @Description TODO
- * @createTime 2020年03月25日 18:18:00
- */
-public interface LbUserService {
+@Repository
+@Mapper
+public interface LbUserMapper {
     //校验登录
     ResponseResult checkUser(LbUser user, HttpSession session);
 

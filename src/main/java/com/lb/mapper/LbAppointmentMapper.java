@@ -1,9 +1,12 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbAppointment;
 import com.lb.vo.QueryVo;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author 蓝莲花
@@ -12,7 +15,9 @@ import org.beetl.sql.core.engine.PageQuery;
  * @Description TODO
  * @createTime 2020年03月27日 13:59:00
  */
-public interface LbAppointmentService {
+@Repository
+@Mapper
+public interface LbAppointmentMapper {
     //查集合
     PageQuery<LbAppointment> findList(QueryVo queryVo);
 

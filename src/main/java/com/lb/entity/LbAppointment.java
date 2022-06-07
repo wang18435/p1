@@ -64,4 +64,96 @@ public class LbAppointment   {
 	部门名称
 	 */
 	private String department;
+
+	public static String getALIAS_id() {
+		return ALIAS_id;
+	}
+
+	public static String getALIAS_doctor_id() {
+		return ALIAS_doctor_id;
+	}
+
+	public static String getALIAS_patient_id() {
+		return ALIAS_patient_id;
+	}
+
+	public static String getALIAS_expenses() {
+		return ALIAS_expenses;
+	}
+
+	public static String getALIAS_time() {
+		return ALIAS_time;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(Integer doctorId) {
+		this.doctorId = doctorId;
+	}
+
+	public Integer getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(Integer patientId) {
+		this.patientId = patientId;
+	}
+
+	public BigDecimal getExpenses() {
+		return expenses;
+	}
+
+	public void setExpenses(BigDecimal expenses) {
+		this.expenses = expenses;
+	}
+
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 }

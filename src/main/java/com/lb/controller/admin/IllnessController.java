@@ -1,7 +1,8 @@
 package com.lb.controller.admin;
 
+
 import com.lb.entity.LbIllness;
-import com.lb.service.LbIllnessService;
+import com.lb.mapper.LbIllnessMapper;
 import com.lb.vo.ResponseResult;
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/illness")
 public class IllnessController {
     @Autowired
-    private LbIllnessService lbIllnessService;
+    private LbIllnessMapper lbIllnessMapper;
 
     @RequestMapping("/manage")
     public String manage(@RequestParam(required = false, defaultValue = "1") Integer pageNo,
@@ -29,7 +30,7 @@ public class IllnessController {
                          @RequestParam(required = false) String type,
                          Model model) {
         //分页查询
-        PageQuery<LbIllness> page = lbIllnessService.findList(pageNo,pageSize,name);
+        PageQuery<LbIllness> page = lbIllnessMapper.findList(pageNo,pageSize,name);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",pageNo);
         model.addAttribute("name",name);
@@ -54,7 +55,7 @@ public class IllnessController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String editForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("illness",lbIllnessService.findOne(id));
+        model.addAttribute("illness",lbIllnessMapper.findOne(id));
         return "admin/IllnessForm";
     }
 
@@ -64,7 +65,7 @@ public class IllnessController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseResult insert(@RequestBody LbIllness lbIllness) {
-        return lbIllnessService.insertIllness(lbIllness);
+        return lbIllnessMapper.insertIllness(lbIllness);
     }
 
     /**
@@ -74,7 +75,7 @@ public class IllnessController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseResult update(@RequestBody LbIllness lbIllness) {
-        return lbIllnessService.updateIllness(lbIllness);
+        return lbIllnessMapper.updateIllness(lbIllness);
     }
 
     /**
@@ -83,6 +84,6 @@ public class IllnessController {
     @ResponseBody
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public ResponseResult delete(@PathVariable Integer id){
-        return lbIllnessService.deleteIllness(id);
+        return lbIllnessMapper.deleteIllness(id);
     }
 }

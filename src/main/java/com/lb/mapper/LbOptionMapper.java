@@ -1,19 +1,17 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbOption;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName LbDoctorService.java
- * @Description TODO
- * @createTime 2020年03月28日 13:59:00
- */
-public interface LbOptionService {
+@Repository
+@Mapper
+public interface LbOptionMapper {
     //分页查询
     PageQuery<LbOption> findList(Integer pageNo, Integer pageSize, String name, String type);
 

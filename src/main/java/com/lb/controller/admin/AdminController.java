@@ -1,7 +1,8 @@
 package com.lb.controller.admin;
 
+
 import com.lb.entity.LbUser;
-import com.lb.service.LbUserService;
+import com.lb.mapper.LbUserMapper;
 import com.lb.vo.ResponseResult;
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName AdminController.java
- * @Description 管理员用户控制器
- * @createTime 2020年03月26日 13:49:00
- */
 @Controller
 @RequestMapping("/admin/user")
 public class AdminController {
     @Autowired
-    private LbUserService lbUserService;
+    private LbUserMapper lbUserMapper;
 
     @RequestMapping("/manage")
     public String manage(@RequestParam(required = false, defaultValue = "1") Integer pageNo,
@@ -28,7 +22,7 @@ public class AdminController {
                          @RequestParam(required = false) String username,
                          Model model) {
         //分页查询
-        PageQuery<LbUser> page = lbUserService.findList(pageNo,pageSize,username);
+        PageQuery<LbUser> page = lbUserMapper.findList(pageNo,pageSize,username);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",pageNo);
         model.addAttribute("username",username);
@@ -52,7 +46,7 @@ public class AdminController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String editForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("admin",lbUserService.findOne(id));
+        model.addAttribute("admin",lbUserMapper.findOne(id));
         return "admin/adminForm";
     }
 
@@ -62,7 +56,7 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseResult insert(@RequestBody LbUser lbUser) {
-        return lbUserService.insertUser(lbUser);
+        return lbUserMapper.insertUser(lbUser);
     }
 
     /**
@@ -72,7 +66,7 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseResult update(@RequestBody LbUser lbUser) {
-        return lbUserService.updateUser(lbUser);
+        return lbUserMapper.updateUser(lbUser);
     }
 
     /**
@@ -81,7 +75,7 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public ResponseResult delete(@PathVariable Integer id){
-        return lbUserService.deleteUser(id);
+        return lbUserMapper.deleteUser(id);
     }
 
 }

@@ -1,7 +1,8 @@
 package com.lb.controller.home;
 
+
 import com.lb.entity.LbUser;
-import com.lb.service.LbUserService;
+import com.lb.mapper.LbUserMapper;
 import com.lb.vo.ActiveUser;
 import com.lb.vo.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/home/user")
 public class LoginController {
     @Autowired
-    private LbUserService lbUserService;
+    private LbUserMapper lbUserMapper;
 
     /**
      * 登录页面
@@ -40,7 +41,7 @@ public class LoginController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult login(@RequestBody LbUser user, HttpSession session) {
-        return lbUserService.checkUser(user,session);
+        return lbUserMapper.checkUser(user,session);
     }
 
     /**
@@ -49,7 +50,7 @@ public class LoginController {
     @ResponseBody
     @RequestMapping("/register")
     public ResponseResult register(@RequestBody ActiveUser activeUser){
-        return lbUserService.registUser(activeUser);
+        return lbUserMapper.registUser(activeUser);
     }
 
     /**

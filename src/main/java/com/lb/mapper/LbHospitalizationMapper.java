@@ -1,20 +1,18 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbHospitalization;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName LbHospitalizationService.java
- * @Description TODO
- * @createTime 2020年03月27日 13:59:00
- */
-public interface LbHospitalizationService {
+@Repository
+@Mapper
+public interface LbHospitalizationMapper {
     //查集合
     PageQuery<LbHospitalization> findList(long pageNo, long pageSize, String patientName, Date intime);
 

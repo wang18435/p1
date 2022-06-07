@@ -5,10 +5,10 @@ import com.lb.entity.LbAppointment;
 import com.lb.entity.LbMedicalHistory;
 import com.lb.entity.LbPatient;
 import com.lb.entity.LbUser;
-import com.lb.service.LbAppointmentService;
-import com.lb.service.LbHospitalizationService;
-import com.lb.service.LbMedicalHistoryService;
-import com.lb.service.LbPatientService;
+import com.lb.mapper.LbAppointmentMapper;
+import com.lb.mapper.LbHospitalizationMapper;
+import com.lb.mapper.LbMedicalHistoryMapper;
+import com.lb.mapper.LbPatientMapper;
 import com.lb.utils.PDFUtils;
 import com.lb.vo.QueryVo;
 import com.lb.vo.ResponseResult;
@@ -22,17 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName PatientController.java
- * @Description 患者控制器
- * @createTime 2020年03月29日 20:54:00
- */
+
 @Controller
 @RequestMapping("/patient")
 public class FrontPatientController {
@@ -40,23 +35,23 @@ public class FrontPatientController {
     private String appointPath;
 
     @Autowired
-    private LbAppointmentService lbAppointmentService;
+    private LbAppointmentMapper lbAppointmentMapper;
     @Autowired
-    private LbPatientService lbPatientService;
+    private LbPatientMapper lbPatientMapper;
     @Autowired
-    private LbMedicalHistoryService lbMedicalHistoryService;
+    private LbMedicalHistoryMapper lbMedicalHistoryMapper;
     @Autowired
-    private LbHospitalizationService lbHospitalizationService;
+    private LbHospitalizationMapper lbHospitalizationMapper;
 
     /**
      * 患者主页面，显示当前患者的预约记录
      */
     @RequestMapping("/index")
-    public String index(HttpSession session,QueryVo queryVo, Model model) {
+    public String index(HttpSession session, QueryVo queryVo, Model model) {
         //查询当前登录用户的预约记录
         LbUser user = (LbUser) session.getAttribute("user");
         queryVo.setUserId(user.getId());
-        PageQuery<LbAppointment> page = lbAppointmentService.findList(queryVo);
+        PageQuery<LbAppointment> page = lbAppointmentMapper.findList(queryVo);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",queryVo.getPageNo());
         model.addAttribute("path","/patient/index");
@@ -69,7 +64,7 @@ public class FrontPatientController {
     @RequestMapping(value = "/appointment", method = RequestMethod.GET)
     public String form(HttpSession session,Model model) {
         LbUser user = (LbUser) session.getAttribute("user");
-        LbPatient patient = lbPatientService.findOneByUserId(user.getId());
+        LbPatient patient = lbPatientMapper.findOneByUserId(user.getId());
         //将患者的信息放到model
         model.addAttribute("patient",patient);
         return "patient/appointmentForm";
@@ -82,11 +77,11 @@ public class FrontPatientController {
     @RequestMapping(value = "/appointment", method = RequestMethod.POST)
     public ResponseResult save(@RequestBody LbAppointment appointment) {
         appointment.setStatus(Global.SEEK_CODE_NONE);
-        Integer appointmentId = lbAppointmentService.insertReturnId(appointment);
+        Integer appointmentId = lbAppointmentMapper.insertReturnId(appointment);
         LbPatient patient = new LbPatient();
         patient.setId(appointment.getPatientId());
         patient.setAppointmentId(appointmentId);
-        lbPatientService.updatePatient(patient);
+        lbPatientMapper.updatePatient(patient);
         return new ResponseResult(Global.SAVE_CODE_SUCCESS,Global.SAVE_APPOINTMENT_SUCCESS);
     }
 
@@ -98,8 +93,8 @@ public class FrontPatientController {
     public ResponseResult createPDF(HttpSession session) {
         //获取当前用户最近一次的预约记录
         LbUser user = (LbUser) session.getAttribute("user");
-        LbPatient patient = lbPatientService.findOneByUserId(user.getId());
-        LbAppointment appointment = lbAppointmentService.findOne(patient.getAppointmentId());
+        LbPatient patient = lbPatientMapper.findOneByUserId(user.getId());
+        LbAppointment appointment = lbAppointmentMapper.findOne(patient.getAppointmentId());
         return new ResponseResult(Global.APPOINTMENT_CODE_SUCCESS, PDFUtils.createAppointment(appointment,appointPath));
     }
 
@@ -117,7 +112,7 @@ public class FrontPatientController {
     @ResponseBody
     @RequestMapping("/searchInfo")
     public Map<String, List> searchInfo(String type,String name) {
-        return lbPatientService.findInfo(type,name);
+        return lbPatientMapper.findInfo(type,name);
     }
 
     /**
@@ -127,7 +122,7 @@ public class FrontPatientController {
     public String medicalHistory(QueryVo queryVo,HttpSession session, Model model) {
         LbUser user = (LbUser) session.getAttribute("user");
         queryVo.setUserId(user.getId());
-        PageQuery<LbMedicalHistory> page = lbMedicalHistoryService.findList(queryVo);
+        PageQuery<LbMedicalHistory> page = lbMedicalHistoryMapper.findList(queryVo);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",queryVo.getPageNo());
         model.addAttribute("path","/patient/medicalHistory");
@@ -140,7 +135,7 @@ public class FrontPatientController {
     @RequestMapping("/hospitalization")
     public String hospitalization(HttpSession session, Model model) {
         LbUser user = (LbUser) session.getAttribute("user");
-        model.addAttribute("hospitalization",lbHospitalizationService.findOneByUserId(user.getId()));
+        model.addAttribute("hospitalization",lbHospitalizationMapper.findOneByUserId(user.getId()));
         return "patient/hospitalization";
     }
 }

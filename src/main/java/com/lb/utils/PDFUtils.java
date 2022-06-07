@@ -1,5 +1,6 @@
 package com.lb.utils;
 
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -11,7 +12,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.lb.entity.LbAppointment;
 import com.lb.entity.LbOption;
 import com.lb.entity.LbSeek;
-import com.lb.service.LbOptionService;
+import com.lb.mapper.LbOptionMapper;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class PDFUtils {
         }
     }
 
-    public static String createSeekInfo(LbSeek seek, LbOptionService optionService, String path) {
+    public static String createSeekInfo(LbSeek seek, LbOptionMapper optionService, String path) {
         List ids=OptionUtils.getOptionIds(seek.getOptions());
         List<LbOption> options=new ArrayList<>();
         ids.forEach(id->{

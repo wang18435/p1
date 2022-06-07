@@ -1,8 +1,11 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbIllness;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author 蓝莲花
@@ -11,7 +14,9 @@ import org.beetl.sql.core.engine.PageQuery;
  * @Description TODO
  * @createTime 2020年03月28日 13:59:00
  */
-public interface LbIllnessService {
+@Repository
+@Mapper
+public interface LbIllnessMapper {
     //分页查询
     PageQuery<LbIllness> findList(Integer pageNo, Integer pageSize, String name);
 

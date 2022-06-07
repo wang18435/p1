@@ -1,7 +1,8 @@
 package com.lb.controller.admin;
 
+
 import com.lb.entity.LbOption;
-import com.lb.service.LbOptionService;
+import com.lb.mapper.LbOptionMapper;
 import com.lb.vo.ResponseResult;
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName PatientController.java
- * @Description 科目管理控制器
- * @createTime 2020年03月28日 13:48:00
- */
 @Controller
 @RequestMapping("/admin/option")
 public class OptionController {
     @Autowired
-    private LbOptionService lbOptionService;
+    private LbOptionMapper lbOptionMapper;
 
     @RequestMapping("/manage")
     public String manage(@RequestParam(required = false, defaultValue = "1") Integer pageNo,
@@ -29,7 +23,7 @@ public class OptionController {
                          @RequestParam(required = false) String type,
                          Model model) {
         //分页查询
-        PageQuery<LbOption> page = lbOptionService.findList(pageNo,pageSize,name,type);
+        PageQuery<LbOption> page = lbOptionMapper.findList(pageNo,pageSize,name,type);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",pageNo);
         model.addAttribute("name",name);
@@ -54,7 +48,7 @@ public class OptionController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String editForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("option",lbOptionService.findOne(id));
+        model.addAttribute("option",lbOptionMapper.findOne(id));
         return "admin/optionForm";
     }
 
@@ -64,7 +58,7 @@ public class OptionController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseResult insert(@RequestBody LbOption lboption) {
-        return lbOptionService.insertOption(lboption);
+        return lbOptionMapper.insertOption(lboption);
     }
 
     /**
@@ -74,7 +68,7 @@ public class OptionController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseResult update(@RequestBody LbOption lboption) {
-        return lbOptionService.updateOption(lboption);
+        return lbOptionMapper.updateOption(lboption);
     }
 
     /**
@@ -83,6 +77,6 @@ public class OptionController {
     @ResponseBody
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public ResponseResult delete(@PathVariable Integer id){
-        return lbOptionService.deleteOption(id);
+        return lbOptionMapper.deleteOption(id);
     }
 }

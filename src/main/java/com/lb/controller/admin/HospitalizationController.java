@@ -1,9 +1,10 @@
 package com.lb.controller.admin;
 
+
 import com.lb.entity.LbHospitalization;
 import com.lb.entity.LbPatient;
-import com.lb.service.LbHospitalizationService;
-import com.lb.service.LbPatientService;
+import com.lb.mapper.LbHospitalizationMapper;
+import com.lb.mapper.LbPatientMapper;
 import com.lb.utils.ExcelUtiles;
 import com.lb.vo.ResponseResult;
 import org.beetl.sql.core.engine.PageQuery;
@@ -17,24 +18,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName PatientController.java
- * @Description 科目管理控制器
- * @createTime 2020年03月29日 12:48:00
- */
+
 @Controller
 @RequestMapping("/admin/hospitalization")
 public class HospitalizationController {
     @Autowired
-    private LbHospitalizationService lbHospitalizationService;
+    private LbHospitalizationMapper lbHospitalizationMapper;
     @Autowired
-    private LbPatientService lbPatientService;
+    private LbPatientMapper lbPatientMapper;
 
     @ModelAttribute("patients")
     public List<LbPatient> getPatients() {
-        return lbPatientService.findAll();
+        return lbPatientMapper.findAll();
     }
 
     @RequestMapping("/manage")
@@ -44,7 +39,7 @@ public class HospitalizationController {
                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date intime,
                          Model model) {
         //分页查询
-        PageQuery<LbHospitalization> page = lbHospitalizationService.findList(pageNo,pageSize,patientName,intime);
+        PageQuery<LbHospitalization> page = lbHospitalizationMapper.findList(pageNo,pageSize,patientName,intime);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",pageNo);
         model.addAttribute("patientName",patientName);
@@ -69,7 +64,7 @@ public class HospitalizationController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String editForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("hospitalization",lbHospitalizationService.findOne(id));
+        model.addAttribute("hospitalization",lbHospitalizationMapper.findOne(id));
         return "admin/hospitalizationForm";
     }
 
@@ -79,7 +74,7 @@ public class HospitalizationController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseResult insert(@RequestBody LbHospitalization lbHospitalization) {
-        return lbHospitalizationService.insertHospitalization(lbHospitalization);
+        return lbHospitalizationMapper.insertHospitalization(lbHospitalization);
     }
 
     /**
@@ -89,7 +84,7 @@ public class HospitalizationController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseResult update(@RequestBody LbHospitalization lbHospitalization) {
-        return lbHospitalizationService.updateHospitalization(lbHospitalization);
+        return lbHospitalizationMapper.updateHospitalization(lbHospitalization);
     }
 
     /**
@@ -98,7 +93,7 @@ public class HospitalizationController {
     @ResponseBody
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public ResponseResult delete(@PathVariable Integer id){
-        return lbHospitalizationService.deleteById(id);
+        return lbHospitalizationMapper.deleteById(id);
     }
 
     /**
@@ -106,7 +101,7 @@ public class HospitalizationController {
      */
     @GetMapping("/export")
     public void export(HttpServletResponse response) {
-        List<LbHospitalization> list = lbHospitalizationService.findAll();
+        List<LbHospitalization> list = lbHospitalizationMapper.findAll();
         ExcelUtiles.exportExcel(list,"住院记录","住院记录",LbHospitalization.class,"住院记录.xls",response);
     }
 }

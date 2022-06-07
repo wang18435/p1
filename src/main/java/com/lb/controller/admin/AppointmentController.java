@@ -1,8 +1,9 @@
 package com.lb.controller.admin;
 
+
 import com.lb.entity.LbAppointment;
-import com.lb.service.LbAppointmentService;
-import com.lb.service.LbPatientService;
+import com.lb.mapper.LbAppointmentMapper;
+import com.lb.mapper.LbPatientMapper;
 import com.lb.vo.QueryVo;
 import com.lb.vo.ResponseResult;
 import org.beetl.sql.core.engine.PageQuery;
@@ -11,25 +12,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName AppointmentController.java
- * @Description 预约管理控制器
- * @createTime 2020年03月27日 13:48:00
- */
 @Controller
 @RequestMapping("/admin/appointment")
 public class AppointmentController {
     @Autowired
-    private LbAppointmentService lbAppointmentService;
+    private LbAppointmentMapper lbAppointmentMapper;
     @Autowired
-    private LbPatientService lbPatientService;
+    private LbPatientMapper lbPatientMapper;
 
     @RequestMapping("/manage")
-    public String manage(QueryVo queryVo,Model model) {
+    public String manage(QueryVo queryVo, Model model) {
         //查询预约记录
-        PageQuery<LbAppointment> page = lbAppointmentService.findList(queryVo);
+        PageQuery<LbAppointment> page = lbAppointmentMapper.findList(queryVo);
         model.addAttribute("page",page);
         model.addAttribute("pageNo",queryVo.getPageNo());
         model.addAttribute("patientName",queryVo.getPatientName());
@@ -43,7 +37,7 @@ public class AppointmentController {
      */
     @RequestMapping("/")
     public String doctorAddForm(LbAppointment lbAppointment,Model model) {
-        model.addAttribute("patientList",lbPatientService.findAll());
+        model.addAttribute("patientList",lbPatientMapper.findAll());
         model.addAttribute("appointment",lbAppointment);
         return "admin/appointmentForm";
     }
@@ -55,7 +49,7 @@ public class AppointmentController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String doctorEditForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("appointment",lbAppointmentService.findOne(id));
+        model.addAttribute("appointment",lbAppointmentMapper.findOne(id));
         return "admin/appointmentForm";
     }
 
@@ -65,7 +59,7 @@ public class AppointmentController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseResult insert(@RequestBody LbAppointment lbAppointment) {
-        return lbAppointmentService.insertAppointment(lbAppointment);
+        return lbAppointmentMapper.insertAppointment(lbAppointment);
     }
 
     /**
@@ -76,7 +70,7 @@ public class AppointmentController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseResult update(@RequestBody LbAppointment lbAppointment) {
-        return lbAppointmentService.updateAppointment(lbAppointment);
+        return lbAppointmentMapper.updateAppointment(lbAppointment);
     }
 
     /**
@@ -85,6 +79,6 @@ public class AppointmentController {
     @ResponseBody
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public ResponseResult delete(@PathVariable Integer id){
-        return lbAppointmentService.deleteById(id);
+        return lbAppointmentMapper.deleteById(id);
     }
 }

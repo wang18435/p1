@@ -1,18 +1,16 @@
-package com.lb.service;
+package com.lb.mapper;
+
 
 import com.lb.entity.LbMedicalHistory;
 import com.lb.vo.QueryVo;
 import com.lb.vo.ResponseResult;
+import org.apache.ibatis.annotations.Mapper;
 import org.beetl.sql.core.engine.PageQuery;
+import org.springframework.stereotype.Repository;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName LbMedicalHistoryService.java
- * @Description TODO
- * @createTime 2020年03月27日 13:59:00
- */
-public interface LbMedicalHistoryService {
+@Repository
+@Mapper
+public interface LbMedicalHistoryMapper {
     //查集合
     PageQuery<LbMedicalHistory> findList(QueryVo queryVo);
 

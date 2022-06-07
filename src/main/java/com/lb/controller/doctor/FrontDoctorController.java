@@ -1,8 +1,9 @@
 package com.lb.controller.doctor;
 
+
 import com.lb.common.Global;
 import com.lb.entity.*;
-import com.lb.service.*;
+import com.lb.mapper.*;
 import com.lb.utils.PDFUtils;
 import com.lb.vo.QueryVo;
 import com.lb.vo.ResponseResult;
@@ -12,37 +13,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author 蓝莲花
- * @version 1.0.0
- * @ClassName DoctorController.java
- * @Description 医生管理端控制台
- * @createTime 2020年03月26日 13:57:00
- */
 @Controller
 @RequestMapping("/doctor")
 public class FrontDoctorController {
     @Autowired
-    private LbDoctorService lbDoctorService;
+    private LbDoctorMapper lbDoctorMapper;
     @Autowired
-    private LbPatientService lbPatientService;
+    private LbPatientMapper lbPatientService;
     @Autowired
-    private LbAppointmentService lbAppointmentService;
+    private LbAppointmentMapper lbAppointmentMapper;
     @Autowired
-    private LbOptionService lbOptionService;
+    private LbOptionMapper lbOptionMapper;
     @Autowired
-    private LbDrugsService lbDrugsService;
+    private LbDrugsMapper lbDrugsMapper;
     @Autowired
-    private LbSeekService lbSeekService;
+    private LbSeekMapper lbSeekMapper;
     @Autowired
-    private LbHospitalizationService lbHospitalizationService;
+    private LbHospitalizationMapper lbHospitalizationMapper;
     @Autowired
-    private LbMedicalHistoryService lbMedicalHistoryService;
+    private LbMedicalHistoryMapper lbMedicalHistoryMapper;
 
     @Value("${filepath.seekpdfpath}")
     private String path;
@@ -54,10 +47,10 @@ public class FrontDoctorController {
     public String index(QueryVo queryVo, HttpSession session, Model model){
         LbUser user = (LbUser) session.getAttribute("user");
         queryVo.setUserId(user.getId());
-        LbDoctor doctor = lbDoctorService.findOneByUserId(user.getId());
+        LbDoctor doctor = lbDoctorMapper.findOneByUserId(user.getId());
 
         //获取患者信息
-        PageQuery<LbAppointment> page = lbAppointmentService.findListByDoctor(queryVo);
+        PageQuery<LbAppointment> page = lbAppointmentMapper.findListByDoctor(queryVo);
         model.addAttribute("page", page);
         model.addAttribute("pageNo",queryVo.getPageNo());
         model.addAttribute("path","/doctor/index");
@@ -75,9 +68,9 @@ public class FrontDoctorController {
         //获取患者信息
         model.addAttribute("patient",lbPatientService.findOne(patientId));
         //检查项目列表
-        model.addAttribute("options",lbOptionService.findAll());
+        model.addAttribute("options",lbOptionMapper.findAll());
         //药品列表
-        model.addAttribute("drugs", lbDrugsService.findAll());
+        model.addAttribute("drugs", lbDrugsMapper.findAll());
         model.addAttribute("appointmentId", appointmentId);
         return "doctor/seek";
     }
@@ -87,8 +80,8 @@ public class FrontDoctorController {
      */
     @ResponseBody
     @RequestMapping("/seekInfo")
-    public ResponseResult seekInfo(@RequestBody Map map,HttpSession session) {
-        return lbSeekService.save(map,session);
+    public ResponseResult seekInfo(@RequestBody Map map, HttpSession session) {
+        return lbSeekMapper.save(map,session);
     }
 
     /**
@@ -96,8 +89,8 @@ public class FrontDoctorController {
      */
     @ResponseBody
     @RequestMapping("/drug")
-    public ResponseResult drug(@RequestBody Map map,HttpSession session) {
-        return lbSeekService.update(map,session);
+    public ResponseResult drug(@RequestBody Map map, HttpSession session) {
+        return lbSeekMapper.update(map,session);
     }
 
     /**
@@ -106,7 +99,7 @@ public class FrontDoctorController {
     @ResponseBody
     @RequestMapping("/zation")
     public ResponseResult zation(@RequestBody LbHospitalization hospitalization) {
-        ResponseResult result = lbHospitalizationService.insertHospitalization(hospitalization);
+        ResponseResult result = lbHospitalizationMapper.insertHospitalization(hospitalization);
         return result;
     }
 
@@ -117,7 +110,7 @@ public class FrontDoctorController {
     public String medicalHistory(@PathVariable("id") Integer patientId,Model model) {
         QueryVo queryVo = new QueryVo();
         queryVo.setPatientId(patientId);
-        List<LbMedicalHistory> medicalHistoryList = lbMedicalHistoryService.findList(queryVo).getList();
+        List<LbMedicalHistory> medicalHistoryList = lbMedicalHistoryMapper.findList(queryVo).getList();
         model.addAttribute("medicalHistoryList",medicalHistoryList);
         return "doctor/medicalHistory";
     }
@@ -132,12 +125,12 @@ public class FrontDoctorController {
                                     @PathVariable("appointmentId") Integer appointmentId,
                                     HttpSession session){
         LbUser user = (LbUser) session.getAttribute("user");
-        LbDoctor doctor = lbDoctorService.findOneByUserId(user.getId());
-        LbSeek seek = lbSeekService.findOneByPatientId(patientId,appointmentId,session);
+        LbDoctor doctor = lbDoctorMapper.findOneByUserId(user.getId());
+        LbSeek seek = lbSeekMapper.findOneByPatientId(patientId,appointmentId,session);
         seek.setPatientName(lbPatientService.findOne(patientId).getName());
         seek.setDoctorName(doctor.getName());
         //createSeekInfo，第三个参数填空字符串就是生成在项目根目录里面，要是想生成在别的路径，例：D:\\ 就是生成在D盘根目录
-        String message = PDFUtils.createSeekInfo(seek,lbOptionService,path);
+        String message = PDFUtils.createSeekInfo(seek,lbOptionMapper,path);
         return new ResponseResult(Global.SEEK_CODE_SUCCESS,message);
     }
 
@@ -150,7 +143,7 @@ public class FrontDoctorController {
         LbAppointment appointment = new LbAppointment();
         appointment.setId(id);
         appointment.setStatus(Global.SEEK_CODE_DONE);
-        return lbAppointmentService.updateAppointment(appointment);
+        return lbAppointmentMapper.updateAppointment(appointment);
     }
 
     /**
@@ -159,6 +152,6 @@ public class FrontDoctorController {
     @ResponseBody
     @RequestMapping(value = "/getList/{department}")
     public List<LbDoctor> getList(@PathVariable String department){
-        return lbDoctorService.getListByDepartment(department);
+        return lbDoctorMapper.getListByDepartment(department);
     }
 }
